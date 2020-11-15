@@ -1,20 +1,21 @@
 import Rceact from 'react'
 import { Card } from 'react-bootstrap'
 import Rating from './Rating'
+import { LinkContainer } from 'react-router-bootstrap'
 
 const product = ({ product }) => {
     return (
 
         <Card>
-            <a href={`/product/${product._id}`}>
+            <LinkContainer to={`/product/${product._id}`}>
                 <Card.Img src={product.image} variant='top' />
-            </a>
+            </LinkContainer>
             <Card.Body>
-                <a href={`/product/${product._id}`}>
+                <LinkContainer to={`/product/${product._id}`}>
                     <Card.Title as='div'>
                         <strong> {product.name}</strong>
                     </Card.Title>
-                </a>
+                </LinkContainer>
                 <Card.Text as='div' className='py-2'>
                     <Rating value={product.rating} text={`${product.numReviews} reviews`} />
                 </Card.Text>
