@@ -18,7 +18,7 @@ const ProductScreen = ({ match }) => {
             setProduct(product)
         }
         fetchProduct()
-    }, [])
+    }, [match.params.id])
 
     return (
         <>
@@ -46,23 +46,25 @@ const ProductScreen = ({ match }) => {
                     </ListGroup>
                 </Col>
                 <Col md={3}>
-                    <ListGroup className='text-center'>
-                        <ListGroup.Item>
-                            Price: {product.price}$
+                    <Card>
+                        <ListGroup className='text-center'>
+                            <ListGroup.Item>
+                                Price: {product.price}$
                         </ListGroup.Item>
-                        <ListGroup.Item>
-                            status: {product.countInStock > 1 ? 'in stock' : 'out of stock'}
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                            <Button
-                                type='button'
-                                className='btn btn-block'
-                                disabled={product.countInStock == 0}
-                            >
-                                Add to cart
+                            <ListGroup.Item>
+                                status: {product.countInStock > 1 ? 'in stock' : 'out of stock'}
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Button
+                                    type='button'
+                                    className='btn btn-block'
+                                    disabled={product.countInStock === 0}
+                                >
+                                    Add to cart
                             </Button>
-                        </ListGroup.Item>
-                    </ListGroup>
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </Card>
                 </Col>
             </Row>
         </>
