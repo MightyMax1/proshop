@@ -5,7 +5,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    mail: {
+    email: {
         type: String,
         required: true,
         unique: true
@@ -14,13 +14,13 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    isAdmine: {
+    isAdmin: {
         type: Boolean,
         required: true,
         default: false
     }
 }, {
-    timestemps: true
+    timestamps: true
 })
 
 
