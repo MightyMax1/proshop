@@ -15,7 +15,8 @@ Router.get('/', asyncHandler(async (req, res) => {
 Router.get('/:id', asyncHandler(async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        res.status(406).json({ msg: 'product ID is not valid' })
+        res.status(406)
+        throw new Error('product ID is not valid')
     }
 
     const product = await Products.findById(req.params.id)
@@ -23,7 +24,8 @@ Router.get('/:id', asyncHandler(async (req, res) => {
     if (product) {
         res.json(product);
     } else {
-        res.status(404).json({ msg: ' product not found' })
+        res.status(404)
+        throw new Error('product not found')
     }
 }))
 
