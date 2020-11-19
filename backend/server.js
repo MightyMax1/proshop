@@ -8,8 +8,7 @@ dotenv.config()
 connectDB()
 const app = express()
 
-app.use(errorHandler)
-app.use(notFound)
+
 
 app.use('/api/products', ProductRouter)
 
@@ -18,7 +17,8 @@ app.get('/', (req, res) => {
 })
 
 
-
+app.use(errorHandler)
+app.use(notFound)
 
 const PORT = process.env.PORT || 5000
 
