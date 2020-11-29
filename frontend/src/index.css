@@ -5,3 +5,9 @@ main {
 h4 {
   padding: 1rem 0;
 }
+
+.btn-primary:disabled {
+  background-color: #495057;
+  border-color: black;
+  color: white;
+}
