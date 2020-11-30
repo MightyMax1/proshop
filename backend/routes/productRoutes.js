@@ -1,32 +1,14 @@
 import express from 'express'
-import asyncHandler from 'express-async-handler'
-import Products from '../models/productModel.js'
-import mongoose from 'mongoose'
 
+import { getProductById, getProducts } from '../controllers/productController.js'
 
 const Router = express.Router()
 
 
-Router.get('/', asyncHandler(async (req, res) => {
-    const products = await Products.find({})
-    res.json(products);
-}))
+// Router.route('/').get(getProducts)
+// Router.route('/:id').get(getProductById)
 
-Router.get('/:id', asyncHandler(async (req, res) => {
+Router.get('/', getProducts)
 
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        res.status(406)
-        throw new Error('product ID is not valid')
-    }
-
-    const product = await Products.findById(req.params.id)
-
-    if (product) {
-        res.json(product);
-    } else {
-        res.status(404)
-        throw new Error('product not found')
-    }
-}))
 
 export default Router
