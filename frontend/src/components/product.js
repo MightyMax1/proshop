@@ -6,7 +6,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 const product = ({ product }) => {
     return (
 
-        <Card>
+        <Card className={'my-3  p-3 rounded'}>
             <LinkContainer to={`/product/${product._id}`}>
                 <Card.Img src={product.image} variant='top' />
             </LinkContainer>
