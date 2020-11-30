@@ -2,12 +2,13 @@ import axios from 'axios'
 import { CART_ADD_ITEM } from '../constants/cartConstants'
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
+
     const { data } = await axios.get(`/api/products/${id}`)
 
     dispatch({
         type: CART_ADD_ITEM,
         payload: {
-            product: data.id,
+            product: data._id,
             name: data.name,
             image: data.image,
             price: data.price,
@@ -16,6 +17,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
         }
     })
 
+    //why set the item her and not in cartReducer after the item was added to state?
     localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
 
 }
