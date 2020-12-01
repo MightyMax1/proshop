@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import bcrypt from 'bcryptjs'
 
 const userSchema = mongoose.Schema({
     name: {
@@ -23,6 +24,13 @@ const userSchema = mongoose.Schema({
     timestamps: true
 })
 
+//arrow function not working her
+//because "this" in the arrow function point to the parent object and there is no parent object or function there
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    //this.password - will work becouse
+    // we call matchPassword() on specific user
+    return await bcrypt.compare(enteredPassword, this.password)
+}
 
 const User = mongoose.model('User', userSchema)
 
