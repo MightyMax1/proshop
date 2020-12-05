@@ -35,7 +35,7 @@ const ProductScreen = ({ match, history }) => {
                 go back
             </Link>
             {loading ? <Loader /> :
-                error ? <Message variant={'danger'} text={error} /> :
+                error ? < Message variant={'danger'} >{error}</Message> :
                     <Row>
                         <Col md={6}>
                             <Image src={product.image} alt={product.name} fluid />
