@@ -16,7 +16,7 @@ app.use(express.json())//Middleware parse json in body req
 
 app.use('/api/products', ProductRouter)
 app.use('/api/users', UserRoutes)
-app.use('api/orders', OrderRouter)
+app.use('/api/orders', OrderRouter)
 
 app.get('/', (req, res) => {
     res.send('msg from server');
