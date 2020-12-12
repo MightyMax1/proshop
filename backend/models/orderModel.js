@@ -85,7 +85,7 @@ const orderSchema = mongoose.Schema({
     },
 
 }, {
-    timestemps: true
+    timestamps: true
 })
 
 
