@@ -18,6 +18,11 @@ app.use('/api/products', ProductRouter)
 app.use('/api/users', UserRoutes)
 app.use('/api/orders', OrderRouter)
 
+app.use('/api/config/paypal', (req, res) => {
+    res.send(process.env.PAYPAL_CLIENT_ID)
+})
+
+
 app.get('/', (req, res) => {
     res.send('msg from server');
 })
