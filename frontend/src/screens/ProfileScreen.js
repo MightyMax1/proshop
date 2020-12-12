@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Form, Button, Row, Col, FormGroup } from 'react-bootstrap'
+import { Form, Button, Row, Col, Table } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { getUserDetails, updateUserProfile } from '../actions/userAction'
+import { listMyOrders } from '../actions/orderAction'
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstant'
 
 
@@ -28,6 +30,11 @@ const ProfileScreen = ({ location, history }) => {
     const userUpdateProfile = useSelector(state => state.userUpdateProfile)
     const { success } = userUpdateProfile
 
+    const orderMyList = useSelector(state => state.orderListMy)
+    const { error: orderListError, loading: orderListLoading, orders } = orderMyList
+
+
+
     useEffect(() => {
 
         if (!userInfo) {
@@ -35,14 +42,14 @@ const ProfileScreen = ({ location, history }) => {
         } else {
             if (!user.name) {
                 dispatch(getUserDetails('profile'))
-
+                dispatch(listMyOrders())
             } else {
                 setName(user.name)
                 setEmail(user.email)
             }
         }
 
-    }, [dispatch, userInfo, history, user])
+    }, [dispatch, userInfo, history, user, orders])
 
 
     const submitHandler = (e) => {
@@ -108,9 +115,56 @@ const ProfileScreen = ({ location, history }) => {
                 </Form>
             </Col>
             <Col md={8}>
-                my orders
+                <h3>MY ORDERS</h3>
+                {
+                    orderListLoading
+                        ? <Loader />
+                        : orderListError
+                            ? <Message variant='danger'>{orderListError} </Message>
+                            : (
+                                <Table striped bordered hover responsive className='table-sm'>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>DATE</th>
+                                            <th>TOTAL</th>
+                                            <th>PAID</th>
+                                            <th>DELIVERED</th>
+                                            <th>DETAILS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {orders.map(order => (
+                                            <tr>
+                                                <td>{order._id}</td>
+                                                <td>{order.createdAt.substring(0, 19)}</td>
+                                                <td>{order.totalPrice}</td>
+                                                <td className='text-center'>{order.isPaid ? (
+                                                    order.paidAt.substring(0, 10)
+                                                ) : (
+                                                        <i className='fas fa-times' style={{ color: 'red' }}></i>
+                                                    )}
+                                                </td>
+                                                <td className='text-center'>{order.isDelivered ? (
+                                                    order.deliceredAt.substring(0, 10)
+                                                ) : (
+                                                        <i className='fas fa-times' style={{ color: 'red' }}></i>
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <LinkContainer to={`/order/${order._id}`}>
+                                                        <Button className='btn-sm' variant='info'>Details</Button>
+                                                    </LinkContainer>
+                                                </td>
+                                            </tr>
+                                        )
+                                        )}
+                                    </tbody>
+                                </Table>
+                            )
+                }
             </Col>
-        </Row>
+        </Row >
 
     )
 }
