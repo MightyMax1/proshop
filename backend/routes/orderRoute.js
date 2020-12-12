@@ -6,6 +6,6 @@ const Router = express.Router()
 
 Router.route('/').post(protect, addOrderItems)
 Router.route('/:id').get(protect, getOrderById)
-Router.route('/:id/pay').get(protect, updateOrderToPaid)
+Router.route('/:id/pay').put(protect, updateOrderToPaid)
 
 export default Router
