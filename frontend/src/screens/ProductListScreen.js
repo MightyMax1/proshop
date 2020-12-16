@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Button, Table, Row, Col } from 'react-bootstrap'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProduct } from '../actions/productActions'
+import { listProduct, deleteProduct } from '../actions/productActions'
 
 const ProductListScreen = ({ match, history }) => {
 
@@ -16,16 +16,21 @@ const ProductListScreen = ({ match, history }) => {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
+    const productDelete = useSelector(state => state.productDelete)
+    const { error: errorDelete, success: successDelete, loading: loadingDelete } = productDelete
+
     useEffect(() => {
         if (userInfo && userInfo.isAdmin) {
             dispatch(listProduct())
         } else {
             history.push('/login')
         }
-    }, [dispatch, history])
+    }, [dispatch, history, successDelete])
 
-    const deleteHandler = (userId) => {
-        //delete product
+    const deleteHandler = (productId) => {
+        if (window.confirm('Are you sure?')) {
+            dispatch(deleteProduct(productId))
+        }
     }
 
     const createProductHandler = () => {
@@ -44,6 +49,12 @@ const ProductListScreen = ({ match, history }) => {
                     </Button>
                 </Col>
             </Row>
+            {loadingDelete
+                ? <Loader />
+                : error
+                    ? <Message variant='danger'>{error}</Message>
+                    : ''
+            }
             {loading
                 ? <Loader />
                 : error
