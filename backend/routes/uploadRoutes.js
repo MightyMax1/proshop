@@ -5,22 +5,27 @@ import path from 'path'
 const router = express.Router()
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, '/uploads')
+    destination(req, file, cb) {
+        cb(null, 'uploads/')
     },
-    filename: function (req, file, cb) {
-        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
-    }
+    filename(req, file, cb) {
+        console.log(file)
+        cb(
+            null,
+            `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+        )
+    },
 })
 
-const checkFileType = (file, cb) => {
+function checkFileType(file, cb) {
     const filetypes = /jpg|jpeg|png/
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
     const mimetype = filetypes.test(file.mimetype)
+
     if (extname && mimetype) {
         return cb(null, true)
     } else {
-        return ('Images Only!')
+        cb(new Error('Only image upload is allowed!'), false)
     }
 }
 
@@ -28,7 +33,7 @@ const upload = multer({
     storage,
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb)
-    }
+    },
 })
 
 router.post('/', upload.single('image'), (req, res) => {
