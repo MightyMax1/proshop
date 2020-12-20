@@ -1,11 +1,13 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import path from 'path'
 import connectDB from './config/db.js'
 import { errorHandler, notFound } from './middleware/errorMiddelware.js'
 
 import ProductRouter from './routes/productRoutes.js'
 import UserRoutes from './routes/userRoutes.js'
 import OrderRouter from './routes/orderRoute.js'
+import uploadRoutes from './routes/uploadRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -17,10 +19,14 @@ app.use(express.json())//Middleware parse json in body req
 app.use('/api/products', ProductRouter)
 app.use('/api/users', UserRoutes)
 app.use('/api/orders', OrderRouter)
+app.use('/api/upload', uploadRoutes)
 
 app.use('/api/config/paypal', (req, res) => {
     res.send(process.env.PAYPAL_CLIENT_ID)
 })
+
+const __dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 
 app.get('/', (req, res) => {
