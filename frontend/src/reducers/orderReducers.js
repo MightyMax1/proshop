@@ -5,6 +5,10 @@ import {
     ORDER_DETAILS_FAIL,
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
+    ORDER_LIST_ALL_RESET,
+    ORDER_LIST_ALL_SUCCESS,
+    ORDER_LIST_ALL_REQUEST,
+    ORDER_LIST_ALL_FAIL,
     ORDER_LIST_MY_FAIL,
     ORDER_LIST_MY_REQUEST,
     ORDER_LIST_MY_RESET,
@@ -103,6 +107,27 @@ export const orderListMyReducer = (state = { orders: [] }, action) => {
             }
         case ORDER_LIST_MY_RESET:
             return { orders: [] }
+        default:
+            return state
+    }
+}
+
+export const orderListAllReducer = (state = { orders: [] }, action) => {
+    switch (action.type) {
+        case ORDER_LIST_ALL_REQUEST:
+            return { loading: true }
+
+        case ORDER_LIST_ALL_SUCCESS:
+            return {
+                loading: false,
+                orders: action.payload,
+            }
+
+        case ORDER_LIST_ALL_FAIL:
+            return {
+                loading: false,
+                error: action.payload,
+            }
         default:
             return state
     }
