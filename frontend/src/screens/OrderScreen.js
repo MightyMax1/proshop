@@ -6,10 +6,10 @@ import { Button, Card, Col, Row, ListGroup, Image } from 'react-bootstrap'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { Link } from 'react-router-dom'
-import { getOrderDetails, payOrder } from '../actions/orderAction'
-import { ORDER_PAY_RESET } from '../constants/orderConstats'
+import { getOrderDetails, payOrder, deliverOrder } from '../actions/orderAction'
+import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../constants/orderConstats'
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
 
     const orderId = match.params.id
 
@@ -17,17 +17,27 @@ const OrderScreen = ({ match }) => {
 
     const dispatch = useDispatch()
 
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
     const orderDetails = useSelector(state => state.orderDetails)
     const { order, loading, error } = orderDetails
 
     const orderPay = useSelector(state => state.orderPay)
     const { success: successPay, loading: loadingPay } = orderPay
 
+    const orderDeliver = useSelector(state => state.orderDeliver)
+    const { success: successDeliver, loading: loadinDeliver, error: errorDeliver } = orderDeliver
+
     if (order) {
         order.itemsPrice = (order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)).toFixed(2)
     }
 
     useEffect(() => {
+
+        if (!userInfo) {
+            history.push('/login')
+        }
 
         const addPayPalScript = async () => {
             const { data: clientId } = await axios.get('/api/config/paypal')
@@ -41,8 +51,9 @@ const OrderScreen = ({ match }) => {
             document.body.appendChild(script)
         }
 
-        if (!order || order._id !== orderId || successPay) {
+        if (!order || order._id !== orderId || successPay || successDeliver) {
             dispatch({ type: ORDER_PAY_RESET })
+            dispatch({ type: ORDER_DELIVER_RESET })
             dispatch(getOrderDetails(orderId))
         } else if (!order.isPaid) {
             if (!window.paypal) {
@@ -52,11 +63,15 @@ const OrderScreen = ({ match }) => {
             }
         }
 
-    }, [dispatch, orderId, successPay, order])
+    }, [dispatch, orderId, successPay, order, successDeliver])
 
     const successPaymentHandler = (paymentResult) => {
 
         dispatch(payOrder(orderId, paymentResult))
+    }
+
+    const deliverHandler = () => {
+        dispatch(deliverOrder(order))
     }
 
     return (
@@ -78,7 +93,7 @@ const OrderScreen = ({ match }) => {
                                 {order.shippingAddress.address}, {order.shippingAddress.city}, {order.shippingAddress.postalCode}, {order.shippingAddress.country}
                             </p>
                             {order.isDelivered
-                                ? <Message variant='success'>Delivered at {order.deliverdAt}</Message>
+                                ? <Message variant='success'>Delivered at: {order.deliveredAt}</Message>
                                 : <Message variant='danger'>Not deliverd</Message>
                             }
                         </ListGroup.Item>
@@ -90,7 +105,7 @@ const OrderScreen = ({ match }) => {
                                 {order.paymentMethod}
                             </p>
                             {(order.isPaid)
-                                ? <Message variant='success'>Paid on {order.paidAt}</Message>
+                                ? <Message variant='success'>Paid on: {order.paidAt}</Message>
                                 : <Message variant='danger'>Not paid</Message>
                             }
                         </ListGroup.Item>
@@ -166,6 +181,17 @@ const OrderScreen = ({ match }) => {
                                     }
                                 </ListGroup.Item>
                             )}
+                            {loadinDeliver && <Loader />}
+                            {errorDeliver && <Message variant='danger'>{errorDeliver}</Message>}
+                            {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                <ListGroup.Item>
+                                    <Button type='button' className='btn btn-block' onClick={deliverHandler} >
+                                        Mark As Delivered
+                                    </Button>
+                                </ListGroup.Item>
+                            )
+
+                            }
                         </ListGroup>
                     </Card>
                 </Col>
