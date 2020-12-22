@@ -6,7 +6,9 @@ import mongoose from 'mongoose'
 // @route ... GET /api/products
 // @access .. Public
 const getProducts = asyncHandler(async (req, res) => {
-
+    const pageSize = 2
+    const page = Number(req.query.pageNumber) || 1
+    console.log(page)
     const keyword = req.query.keyword ?
         {
             name: {
@@ -15,8 +17,9 @@ const getProducts = asyncHandler(async (req, res) => {
             }
         }
         : {}
-    const products = await Products.find({ ...keyword })
-    res.json(products);
+    const count = await Products.countDocuments({ ...keyword })
+    const products = await Products.find({ ...keyword }).limit(pageSize).skip(pageSize * (page - 1))
+    res.json({ products, page, pages: Math.ceil(count / pageSize) });
 })
 
 

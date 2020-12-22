@@ -20,11 +20,11 @@ import {
     PRODUCT_CREATE_REVIEW_REQUEST
 } from '../constants/productConstats'
 
-export const listProduct = (keyword = '') => async (dispatch) => {
+export const listProduct = (keyword = '', pageNumber = '') => async (dispatch) => {
     try {
         dispatch({ type: PRODUCTS_LIST_REQUEST })
 
-        const { data } = await axios.get(`/api/products?keyword=${keyword}`);
+        const { data } = await axios.get(`/api/products?keyword=${keyword}&pageNumber=${pageNumber}`);
 
         dispatch({
             type: PRODUCTS_LIST_SUCCESS,
