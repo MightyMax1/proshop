@@ -8,7 +8,7 @@ import Message from '../components/Message'
 import { detailsProduct, createProductReview } from '../actions/productActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstats'
 
-
+//TODO: add review only for users that recieve the product
 
 const ProductScreen = ({ match, history }) => {
     const [qty, setQty] = useState(1)
