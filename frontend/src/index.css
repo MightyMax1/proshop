@@ -39,3 +39,17 @@ h4 {
 .carousel a {
   margin: 0 auto;
 }
+
+@media (max-width: 900px) {
+  .carousel-caption h2 {
+    font-size: 3.5vw;
+  }
+  .carousel img {
+    height: 300px;
+    padding: 30px;
+    margin: 40px;
+    border-radius: 15%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
