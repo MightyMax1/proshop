@@ -7,7 +7,6 @@ import Message from '../components/Message'
 import Paginate from '../components/Paginate'
 import ProductCarousel from '../components/ProductCarousel'
 import { listProduct } from '../actions/productActions'
-import { Helmet } from "react-helmet";
 import { Link } from 'react-router-dom'
 
 
